@@ -7,7 +7,9 @@ import { useUnique } from '@/composables/useUnique';
 /* Components */
 import BurgerIngredientComponent from './BurgerIngredient.vue';
 /* Misc. */
-import { ref, type Ref } from 'vue';
+import { computed, reactive, ref, type Ref } from 'vue';
+import { Bar } from 'vue-chartjs';
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, type PluginOptionsByType } from 'chart.js';
 
 const { DescriptiveCombinationResult } = useCombinationResult();
 const { burgerIngredients } = useBurger();
@@ -59,6 +61,58 @@ const moveIngredientDown = (index: number) => moveIngredient(index, index+1);
 
 evaluate();
 
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+
+let chartOptions = reactive({
+    responsive: true,
+    type: 'bar',
+    indexAxis: 'y',
+    barThickness: 1000,
+    elements: {
+        bar: {
+            backgroundColor: '#00ff00',
+        }
+    },
+    scales: {
+        x: {
+            display: false,
+            min: -50,
+            max: 50,
+            grid: {
+                color: '#00ff00',
+            }
+        },
+        y: {
+            display: false,
+            grid: {
+                color: '#00ff00',
+            }
+        }
+    },
+    plugins: {
+        legend: {
+            display: false,
+        },
+    }
+})
+
+let softnessValue = ref(40);
+
+const chartData = computed(() => {
+    return {
+        labels: [
+            'Softness',
+        ],
+        datasets: [
+            {
+                data: [softnessValue.value],
+            },
+        ],
+    };
+});
+
+
 </script>
 
 <template>
@@ -103,8 +157,18 @@ evaluate();
             <ul>
                 <li
                 v-for="([quality, value]) in burgerStack.qualities.qualities.entries()"
-                :key="quality">
-                    {{ quality }}: {{ value }}
+                :key="quality"
+                class="flex">
+                    <span>
+                        {{ quality }}: {{ value }}
+                    </span>
+                    
+                    <Bar
+                        :chart-options="chartOptions"
+                        :chart-data="chartData"
+                        :height="8"
+                        :css-classes="'w-8 flex items-center'"
+                    />
                 </li>
             </ul>
         </div>  
