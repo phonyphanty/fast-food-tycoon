@@ -66,52 +66,34 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 let chartOptions = reactive({
     responsive: true,
+    maintainAspectRatio: false,
     type: 'bar',
     indexAxis: 'y',
-    barThickness: 1000,
+    barThickness: 22,
     elements: {
         bar: {
-            backgroundColor: '#00ff00',
+            backgroundColor: '#ffffff',
         }
     },
     scales: {
         x: {
             display: false,
-            min: -50,
-            max: 50,
-            grid: {
-                color: '#00ff00',
-            }
+            min: -25,
+            max: 25,
         },
         y: {
             display: false,
-            grid: {
-                color: '#00ff00',
-            }
         }
     },
     plugins: {
         legend: {
             display: false,
         },
+        tooltip: {
+            enabled: false,
+        }
     }
 })
-
-let softnessValue = ref(40);
-
-const chartData = computed(() => {
-    return {
-        labels: [
-            'Softness',
-        ],
-        datasets: [
-            {
-                data: [softnessValue.value],
-            },
-        ],
-    };
-});
-
 
 </script>
 
@@ -151,24 +133,31 @@ const chartData = computed(() => {
             </TransitionGroup>
         </div>
     </div>
-    <div class="text-right">
+    <div class="text-right pl-4">
         <div class="border-solid border-b-4 border-white pb-4">
             <h3 class="uppercase italic text-xl pb-1">Qualities</h3>
-            <ul>
+            <ul class="space-y-2">
                 <li
                 v-for="([quality, value]) in burgerStack.qualities.qualities.entries()"
                 :key="quality"
-                class="flex">
+                class="flex flex-wrap justify-end gap-x-2 items-center">
                     <span>
-                        {{ quality }}: {{ value }}
+                        {{ quality }}:
                     </span>
-                    
-                    <Bar
+                    <div class="max-w-full">
+                        <Bar
                         :chart-options="chartOptions"
-                        :chart-data="chartData"
-                        :height="8"
-                        :css-classes="'w-8 flex items-center'"
-                    />
+                        :chart-data="{
+                            labels: [quality],
+                            datasets: [{
+                                data: [value],
+                            }],
+                        }"
+                        :css-classes="'relative w-20 max-w-full h-8 flex items-center border border-solid border-white rounded-md bg-no-repeat bg-center bg-[length:1px_72%]'"
+                        class="p-1"
+                        style="background-image: linear-gradient(#fff, #fff)"
+                        />
+                    </div>
                 </li>
             </ul>
         </div>  

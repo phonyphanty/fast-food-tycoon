@@ -7,7 +7,8 @@ const props = defineProps([
 </script>
 
 <template>
-<div class="relative bg-black/75 border-2 border-solid border-white p-4 select-none">
+<div class="relative bg-black/75 border-2 border-solid border-white p-4 select-none"
+style="backdrop-filter: blur(2px) saturate(180%); -webkit-backdrop-filter: blur(2px) saturate(180%);">
     <div class="absolute left-0 top-0 border-t-[1.5rem] border-r-[1.5rem] border-solid border-r-transparent"
     :class="ingredient.borderColour"></div>
     <p>Name: {{ ingredient.name }}</p>

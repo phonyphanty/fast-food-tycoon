@@ -121,6 +121,16 @@ export function useBurgerStack() {
         }
 
         /**
+         * Delete all ingredients in the burger stack.
+         * 
+         * @returns {boolean} true if successful, false otherwise
+         */
+        deleteAll() : boolean {
+            this.ingredients = [];
+            return true;
+        }
+
+        /**
          * Swap the ingredients at the given indices.
          * 
          * @param {number} index1 
