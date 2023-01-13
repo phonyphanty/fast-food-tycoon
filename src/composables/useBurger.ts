@@ -28,10 +28,10 @@ export function useBurger() {
         public get name(): string {
             return this._name;
         }
-        /** The ingredient's price */
-        private _price: number;
-        public get price(): number {
-            return this._price;
+        /** The ingredient's cost */
+        private _cost: number;
+        public get cost(): number {
+            return this._cost;
         }
         /** The ingredient's availability to the player */
         private _available: boolean;
@@ -54,20 +54,20 @@ export function useBurger() {
             return this._borderColour;
         }
 
-        constructor(id: string, name: string, price: number, available: boolean,
+        constructor(id: string, name: string, cost: number, available: boolean,
         type: IngredientType, qualityMap: QualityMap<QualityAndAttributes>, colour: string) {
             super();
             this._id = id;
             this._name = name;
-            this._price = price;
+            this._cost = cost;
             this._available = available;
             this._type = type;
             this._qualityMap = qualityMap;
             this._borderColour = colour;
         }
 
-        public priceToString(price: number) {
-            return price.toFixed(2);
+        public costToString() {
+            return this.cost.toFixed(2);
         }
     }
     
@@ -102,7 +102,7 @@ export function useBurger() {
     }
 
     BurgerIngredients.add(
-        new BurgerIngredient("5esxotsudy8", '🍞 Cheap Bun', 0.10, true, IngredientType.Bun, new QualityMap<QualityAndAttributes>(
+        new BurgerIngredient("5esxotsudy8", '🍞 Cheap Bun', 1, true, IngredientType.Bun, new QualityMap<QualityAndAttributes>(
             makeQualAttr(Quality.Aroma, QualityRating.Neutral),
             makeQualAttr(Quality.Bitterness, QualityRating.Negative),
             makeQualAttr(Quality.Softness, QualityRating.Positive),
@@ -113,7 +113,7 @@ export function useBurger() {
             makeQualAttr(Quality.Umami, QualityRating.Neutral),
             makeQualAttr(Quality.Presentation, QualityRating.Negative),
         ), 'border-t-yellow-600'),
-        new BurgerIngredient("squj2g1fbz", '🍖 Basic Ground Patty', 0.50, true, IngredientType.Patty, new QualityMap<QualityAndAttributes>(
+        new BurgerIngredient("squj2g1fbz", '🍖 Basic Ground Patty', 3, true, IngredientType.Patty, new QualityMap<QualityAndAttributes>(
             makeQualAttr(Quality.Aroma, QualityRating.Positive),
             makeQualAttr(Quality.Bitterness, QualityRating.Positive),
             makeQualAttr(Quality.Toughness, QualityRating.VeryPositive),
@@ -124,7 +124,7 @@ export function useBurger() {
             makeQualAttr(Quality.Umami, QualityRating.VeryPositive),
             makeQualAttr(Quality.Presentation, QualityRating.Neutral),
         ), 'border-t-amber-800'),
-        new BurgerIngredient("msmm387qs0h", '🧀 Cheap Slice of Cheese', 0.25, true, IngredientType.Cheese, new QualityMap<QualityAndAttributes>(
+        new BurgerIngredient("msmm387qs0h", '🧀 Cheap Slice of Cheese', 2, true, IngredientType.Cheese, new QualityMap<QualityAndAttributes>(
             makeQualAttr(Quality.Aroma, QualityRating.Positive),
             makeQualAttr(Quality.Bitterness, QualityRating.Negative),
             makeQualAttr(Quality.Toughness, QualityRating.Positive),

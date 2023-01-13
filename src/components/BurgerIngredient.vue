@@ -13,7 +13,7 @@ style="backdrop-filter: blur(2px) saturate(180%); -webkit-backdrop-filter: blur(
     :class="ingredient.borderColour"></div>
     <p>Name: {{ ingredient.name }}</p>
     <p>
-        Price: {{ ingredient.priceToString(ingredient.price) }}<!--
+        Cost: {{ ingredient.costToString() }}<!--
      --><span class="text-yellow-200 font-bold text-sm ml-0.5">G</span>
     </p>
 </div>

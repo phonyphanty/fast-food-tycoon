@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useBurger } from './composables/useBurger';
-import BurgerStackComponent from './components/BurgerStack.vue';
+//import BurgerStackComponent from './components/MakeBurger.vue';
+import GameComponent from './components/Game.vue';
 
 const { BurgerIngredient, burgerIngredients } = useBurger();
 
@@ -8,8 +9,8 @@ const { BurgerIngredient, burgerIngredients } = useBurger();
 
 <template>
 <div class="h-screen p-4 font-serif">
-  <h1 class="text-center mb-2 font-bold">FAST FOOD EMPIRE</h1>
-  <BurgerStackComponent/>
+  <!-- <BurgerStackComponent/> -->
+  <GameComponent/>
 </div>
   
 </template>

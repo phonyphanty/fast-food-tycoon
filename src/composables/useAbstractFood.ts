@@ -1,6 +1,7 @@
 import { useUnique } from "@/composables/useUnique";
 import { useQuality } from '@/composables/useQuality';
 import { useCombinationResult } from '@/composables/useCombinationResult';
+import { useAbstractIcon } from "@/composables/useAbstractIcon";
 
 import type { IngredientType } from '@/exports/ingredientEnums';
 
@@ -8,24 +9,36 @@ export function useAbstractFood() {
     let { UniqueObject } = useUnique();
     let { QualityMap, QualityAndAttributes } = useQuality();
     let { DescriptiveCombinationResult } = useCombinationResult();
+    let { Icon } = useAbstractIcon();
 
     type UniqueObject<Ingredient> = InstanceType<typeof UniqueObject<Ingredient>>;
     type QualityMap<T> = InstanceType<typeof QualityMap<T>>;
     type DescriptiveCombinationResult = InstanceType<typeof DescriptiveCombinationResult>;
+    type Icon = InstanceType<typeof Icon>;
 
     abstract class Ingredient {
         public abstract id: string;
         public abstract name: string;
-        public abstract price: number;
+        public abstract cost: number;
         public abstract available: boolean;
         public abstract type: IngredientType;
         public abstract qualityMap: QualityMap<InstanceType<typeof QualityAndAttributes>>;
         public abstract borderColour: string;
 
-        public abstract priceToString(price: number): string;
+        public abstract costToString(): string;
     }
     
-    abstract class Stack {
+    abstract class Product {
+        public abstract id: string;
+        public abstract name: string;
+        public abstract cost: number;
+        public abstract price: number;
+        public abstract icon: Icon;
+
+        public abstract generateIcon(): Icon; // TODO: what's a better type? Vue component?
+    }
+
+    abstract class Stack extends Product {
         public abstract ingredients: UniqueObject<Ingredient>[];
         public abstract qualities: QualityMap<number>; 
 
@@ -34,7 +47,9 @@ export function useAbstractFood() {
         public abstract deleteIndex(...indices: number[]): boolean;
         public abstract swapIndex(index1: number, index2: number): boolean;
         public abstract evaluate(): DescriptiveCombinationResult[];
+        public abstract deepCopy(): Stack;
+        public abstract reset(): boolean;
     }
 
-    return { Ingredient, Stack };
+    return { Ingredient, Stack, Product };
 }
