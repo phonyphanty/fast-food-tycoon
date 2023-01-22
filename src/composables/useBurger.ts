@@ -2,7 +2,7 @@
 import { useQuality } from "@/composables/useQuality";
 import { useAbstractFood } from "./useAbstractFood";
 // Exports
-import { Quality, QualityRating, IngredientType } from "@/exports/ingredientEnums";
+import { Quality, IngredientType } from "@/exports/ingredientEnums";
 // Other imports
 import { ref } from "vue";
 
@@ -97,43 +97,34 @@ export function useBurger() {
         }
     }
 
-    const makeQualAttr = (quality: Quality, rating: QualityRating) => {
+    const makeQualAttr = (quality: Quality, rating: number) => {
         return { quality: quality, value: new QualityAndAttributes(quality, rating) };
     }
 
     BurgerIngredients.add(
         new BurgerIngredient("5esxotsudy8", '🍞 Cheap Bun', 1, true, IngredientType.Bun, new QualityMap<QualityAndAttributes>(
-            makeQualAttr(Quality.Aroma, QualityRating.Neutral),
-            makeQualAttr(Quality.Bitterness, QualityRating.Negative),
-            makeQualAttr(Quality.Softness, QualityRating.Positive),
-            makeQualAttr(Quality.Spiciness, QualityRating.Negative),
-            makeQualAttr(Quality.Sweetness, QualityRating.Neutral),
-            makeQualAttr(Quality.Tanginess, QualityRating.Negative),
-            makeQualAttr(Quality.Toughness, QualityRating.Neutral),
-            makeQualAttr(Quality.Umami, QualityRating.Neutral),
-            makeQualAttr(Quality.Presentation, QualityRating.Negative),
+            makeQualAttr(Quality.Aroma, 0),
+            makeQualAttr(Quality.Softness, 1),
+            makeQualAttr(Quality.Spiciness, -1),
+            makeQualAttr(Quality.Sweetness, 0),
+            makeQualAttr(Quality.Umami, 0),
+            makeQualAttr(Quality.Presentation, -1),
         ), 'border-t-yellow-600'),
         new BurgerIngredient("squj2g1fbz", '🍖 Basic Ground Patty', 3, true, IngredientType.Patty, new QualityMap<QualityAndAttributes>(
-            makeQualAttr(Quality.Aroma, QualityRating.Positive),
-            makeQualAttr(Quality.Bitterness, QualityRating.Positive),
-            makeQualAttr(Quality.Toughness, QualityRating.VeryPositive),
-            makeQualAttr(Quality.Softness, QualityRating.Neutral),
-            makeQualAttr(Quality.Spiciness, QualityRating.Negative),
-            makeQualAttr(Quality.Sweetness, QualityRating.Neutral),
-            makeQualAttr(Quality.Tanginess, QualityRating.Positive),
-            makeQualAttr(Quality.Umami, QualityRating.VeryPositive),
-            makeQualAttr(Quality.Presentation, QualityRating.Neutral),
+            makeQualAttr(Quality.Aroma, 1),
+            makeQualAttr(Quality.Softness, -2),
+            makeQualAttr(Quality.Spiciness, -1),
+            makeQualAttr(Quality.Sweetness, 0),
+            makeQualAttr(Quality.Umami, 2),
+            makeQualAttr(Quality.Presentation, 0),
         ), 'border-t-amber-800'),
         new BurgerIngredient("msmm387qs0h", '🧀 Cheap Slice of Cheese', 2, true, IngredientType.Cheese, new QualityMap<QualityAndAttributes>(
-            makeQualAttr(Quality.Aroma, QualityRating.Positive),
-            makeQualAttr(Quality.Bitterness, QualityRating.Negative),
-            makeQualAttr(Quality.Toughness, QualityRating.Positive),
-            makeQualAttr(Quality.Softness, QualityRating.Neutral),
-            makeQualAttr(Quality.Spiciness, QualityRating.Negative),
-            makeQualAttr(Quality.Sweetness, QualityRating.Neutral),
-            makeQualAttr(Quality.Tanginess, QualityRating.Negative),
-            makeQualAttr(Quality.Umami, QualityRating.Neutral),
-            makeQualAttr(Quality.Presentation, QualityRating.VeryNegative),
+            makeQualAttr(Quality.Aroma, 1),
+            makeQualAttr(Quality.Softness, 0),
+            makeQualAttr(Quality.Spiciness, -1),
+            makeQualAttr(Quality.Sweetness, 0),
+            makeQualAttr(Quality.Umami, 0),
+            makeQualAttr(Quality.Presentation, -2),
         ), 'border-t-yellow-300'),
     );
 

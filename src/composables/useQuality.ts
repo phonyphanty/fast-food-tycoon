@@ -1,4 +1,4 @@
-import type { Quality, QualityRating } from "@/exports/ingredientEnums";
+import { Quality } from "@/exports/ingredientEnums";
 
 export function useQuality() {
     class QualityAndAttributes {
@@ -8,12 +8,12 @@ export function useQuality() {
             return this._quality;
         }
         /** The rating */
-        private _rating: QualityRating;
-        public get rating(): QualityRating {
+        private _rating: number;
+        public get rating(): number {
             return this._rating;
         }
 
-        constructor(quality: Quality, rating: QualityRating) {
+        constructor(quality: Quality, rating: number) {
             this._quality = quality;
             this._rating = rating;
         }
@@ -43,5 +43,24 @@ export function useQuality() {
         }
     }
 
-    return { QualityAndAttributes, QualityMap };
+    let qualityToEmoji = {
+        [Quality.Spiciness]: '🌶️',
+        [Quality.Presentation]: '⭐',
+        [Quality.Sweetness]: '🍬',
+        [Quality.Sourness]: '💥',
+        [Quality.Aroma]: '🌼',
+        [Quality.Umami]: '🍖',
+        [Quality.Softness]: '🍦',
+    };
+
+    function qualityValueIntoString(quality: Quality, value: number): string {
+        let emoji = qualityToEmoji[quality];
+        let str = '';
+        for (let i = 0; i < Math.min(5, Math.max(0, value)); i++) {
+            str += emoji;
+        }
+        return str;
+    }
+
+    return { QualityAndAttributes, QualityMap, qualityValueIntoString };
 }

@@ -7,7 +7,7 @@ import { useCombination } from '@/composables/useCombination';
 import { useAbstractIcon } from '@/composables/useAbstractIcon';
 // Exports
 import { RuleCondition as Condition, RuleCoverage as Coverage, RuleQuantifier as Quantifier, RuleRelationalOperator as RelationalOperator } from "@/exports/combinationEnums";
-import { IngredientType, Quality, QualityRating } from '@/exports/ingredientEnums';
+import { IngredientType, Quality } from '@/exports/ingredientEnums';
 
 export function useBurgerStack() {
     let { BurgerIngredient } = useBurger();
@@ -259,6 +259,7 @@ export function useBurgerStack() {
                     });
                 }
             });
+            console.log(this.qualities);
             return results;
         }
 
@@ -302,12 +303,13 @@ export function useBurgerStack() {
         return Object.getPrototypeOf(product).constructor.name === BurgerStack.name;
     }
 
-    const makeQualAttr = (quality: Quality, rating: QualityRating) => {
+    const makeQualAttr = (quality: Quality, rating: number) => {
         return { quality: quality, value: new QualityAndAttributes(quality, rating) };
     }
 
     let combinations: Combination[] = [
-        new Combination('Soft and greasy...', 'Patty-melted cheese', [
+        new Combination('✔️ Soft and greasy...', 'Patty-melted cheese', 
+            [
                 new CombinationRule(
                     Condition.IfTypeDirectlyAboveType,
                     Quantifier.IncludeMany,
@@ -319,13 +321,32 @@ export function useBurgerStack() {
                 ),
             ], [
                 new QualityCombinationEffect(
-                    makeQualAttr(Quality.Softness, QualityRating.Positive),
-                    makeQualAttr(Quality.Presentation, QualityRating.Positive),
-                    makeQualAttr(Quality.Aroma, QualityRating.Positive)
+                    makeQualAttr(Quality.Softness, 1),
+                    makeQualAttr(Quality.Presentation, 1),
+                    makeQualAttr(Quality.Aroma, 1)
                 ),
             ]
         ),
-        new Combination('Stability', 'Encased in burger bun', [
+        new Combination('❌ Double bread', 'Put something between those buns', 
+            [
+                new CombinationRule(
+                    Condition.IfTypeDirectlyAboveType,
+                    Quantifier.IncludeMany,
+                    Coverage.CheckEverywhere,
+                    new IfTypeDirectlyAboveTypeOptions(
+                        IngredientType.Bun,
+                        IngredientType.Bun,
+                    ),
+                ),
+            ], [
+                new QualityCombinationEffect(
+                    makeQualAttr(Quality.Presentation, -3),
+                    makeQualAttr(Quality.Softness, -3),
+                ),
+            ],
+        ),
+        new Combination('✔️ Stability', 'Encased in burger bun', 
+            [
                 new CombinationRule(
                     Condition.IfStackLength,
                     Quantifier.IncludeOne,
@@ -346,8 +367,8 @@ export function useBurgerStack() {
                 ),
             ], [
                 new QualityCombinationEffect(
-                    makeQualAttr(Quality.Softness, QualityRating.Positive),
-                    makeQualAttr(Quality.Presentation, QualityRating.Positive)
+                    makeQualAttr(Quality.Softness, 1),
+                    makeQualAttr(Quality.Presentation, 1)
                 ),
             ]
         ),

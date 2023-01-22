@@ -5,6 +5,7 @@ import { useBurgerStack } from '@/composables/useBurgerStack';
 import { useCombinationResult } from '@/composables/useCombinationResult';
 import { useUnique } from '@/composables/useUnique';
 import { useSharedState } from '@/composables/useSharedState';
+import { useQuality } from '@/composables/useQuality';
 /* Components */
 import BurgerIngredientComponent from './BurgerIngredient.vue';
 /* Misc. */
@@ -17,6 +18,7 @@ const { burgerIngredients } = useBurger();
 const { BurgerStack } = useBurgerStack();
 const { UniqueObject } = useUnique();
 const { mainMenu } = useSharedState();
+const { qualityValueIntoString } = useQuality();
 
 type DescriptiveCombinationResult = InstanceType<typeof DescriptiveCombinationResult>;
 type UniqueObject<T> = InstanceType<typeof UniqueObject<T>>;
@@ -199,20 +201,9 @@ let chartOptions = reactive({
                         <span>
                             {{ quality }}:
                         </span>
-                        <div class="max-w-full">
-                            <Bar
-                            :chart-options="chartOptions"
-                            :chart-data="{
-                                labels: [quality],
-                                datasets: [{
-                                    data: [value],
-                                }],
-                            }"
-                            :css-classes="'relative w-20 max-w-full h-8 flex items-center border border-solid border-white rounded-md bg-no-repeat bg-center bg-[length:1px_72%]'"
-                            class="p-1"
-                            style="background-image: linear-gradient(#fff, #fff)"
-                            />
-                        </div>
+                        <span>
+                            {{ qualityValueIntoString(quality, value) }}
+                        </span>
                     </li>
                 </ul>
             </div>  
