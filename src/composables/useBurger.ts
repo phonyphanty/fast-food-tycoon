@@ -1,18 +1,24 @@
 // Composables
 import { useQuality } from "@/composables/useQuality";
-import { useAbstractFood } from "./useAbstractFood";
+import { useAbstractFood } from "@/composables/useAbstractFood";
+import { useSharedStockState } from "@/composables/useSharedStockState";
+import { useStock } from "@/composables/useStock";
 // Exports
 import { Quality, IngredientType } from "@/exports/ingredientEnums";
 // Other imports
 import { ref } from "vue";
 
 export function useBurger() {
-    let { QualityAndAttributes, QualityMap } = useQuality();
-    let { Ingredient } = useAbstractFood();
+    const { QualityAndAttributes, QualityMap } = useQuality();
+    const { Ingredient } = useAbstractFood();
+    const { stock } = useSharedStockState();
+    const { ElementQuantity } = useStock();
 
     // Instance types
     type QualityMap<QualityAndAttributes> = InstanceType<typeof QualityMap<QualityAndAttributes>>;
     type QualityAndAttributes = InstanceType<typeof QualityAndAttributes>;
+    type Ingredient = InstanceType<typeof Ingredient>;
+    type IngredientQuantity = InstanceType<typeof ElementQuantity<Ingredient>>;
 
     /**
      * Represents a burger ingredient that can be obtained during the game.
@@ -127,6 +133,8 @@ export function useBurger() {
             makeQualAttr(Quality.Presentation, -2),
         ), 'border-t-yellow-300'),
     );
+
+    stock.addIngredient(...BurgerIngredients.ingredients as Ingredient[])
 
     let burgerIngredients = ref(BurgerIngredients.ingredients);
 

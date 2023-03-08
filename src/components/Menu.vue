@@ -10,7 +10,7 @@ const { mainMenu } = useSharedState();
 </script>
 
 <template>
-<div class="border-2 p-4 max-w-lg">
+<article class="border-2 p-4 max-w-lg">
     <h3 class="text-md font-bold mb-2">Menu</h3>
     <div>
         <p v-if="mainMenu.length() === 0" class="italic font-light">Nothing's on your menu. Go make some burgers, chump!</p>
@@ -20,7 +20,7 @@ const { mainMenu } = useSharedState();
             :key="product.id"
         />
     </div>
-</div>
+</article>
 </template>
 
 <style scoped>

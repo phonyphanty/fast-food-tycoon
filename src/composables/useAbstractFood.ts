@@ -42,6 +42,14 @@ export function useAbstractFood() {
         public abstract ingredients: UniqueObject<Ingredient>[];
         public abstract qualities: QualityMap<number>; 
 
+        static [Symbol.hasInstance](instance: any) {
+            let proto: Object = Object.getPrototypeOf(instance);
+            for (; proto !== null; proto = Object.getPrototypeOf(proto)) {
+                if (proto.constructor.name === Stack.name) return true;
+            }
+            return false;
+        }
+
         public abstract add(...ingredients: any): boolean;
         public abstract addIndex(index: number, ...ingredients: Ingredient[]): boolean;
         public abstract deleteIndex(...indices: number[]): boolean;
@@ -51,5 +59,10 @@ export function useAbstractFood() {
         public abstract reset(): boolean;
     }
 
-    return { Ingredient, Stack, Product };
+    function isStack(product: Product): product is Stack {
+        debugger;
+        return Object.getPrototypeOf(product).constructor.name === Stack.name;
+    }
+
+    return { Ingredient, Stack, Product, isStack };
 }

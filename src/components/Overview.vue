@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import MenuComponent from './Menu.vue';
+import DashboardHeadingComponent from './DashboardHeading.vue';
 
 </script>
 
 <template>
 <div class="">
-    <h2 class="text-lg mb-3 font-bold">Overview</h2>
+    <DashboardHeadingComponent content="Overview"/>
     <MenuComponent/>
 </div>
 </template>

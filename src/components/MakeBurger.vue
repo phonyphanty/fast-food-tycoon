@@ -8,10 +8,9 @@ import { useSharedState } from '@/composables/useSharedState';
 import { useQuality } from '@/composables/useQuality';
 /* Components */
 import BurgerIngredientComponent from './BurgerIngredient.vue';
+import DashboardHeadingComponent from './DashboardHeading.vue';
 /* Misc. */
 import { computed, reactive, ref, type Ref } from 'vue';
-import { Bar } from 'vue-chartjs';
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, type PluginOptionsByType } from 'chart.js';
 
 const { DescriptiveCombinationResult } = useCombinationResult();
 const { burgerIngredients } = useBurger();
@@ -92,47 +91,12 @@ const saveBurger = () => {
     }
 }
 
-
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
-
-let chartOptions = reactive({
-    responsive: true,
-    maintainAspectRatio: false,
-    type: 'bar',
-    indexAxis: 'y',
-    barThickness: 22,
-    elements: {
-        bar: {
-            backgroundColor: '#ffffff',
-            hoverBackgroundColor: '#ffffff',
-        }
-    },
-    scales: {
-        x: {
-            display: false,
-            min: -25,
-            max: 25,
-        },
-        y: {
-            display: false,
-        }
-    },
-    plugins: {
-        legend: {
-            display: false,
-        },
-        tooltip: {
-            enabled: false,
-        }
-    }
-})
-
 </script>
 
-<template>
-<div>
-    <h2 class="uppercase italic text-center mb-8">Make a Burger</h2>
-    <div class="h-full w-full grid grid-cols-3 grid-rows-1">
+<template>  
+<div class="grid h-full ffe-makeburger-container">
+    <DashboardHeadingComponent content="Make a Burger"/>
+    <div class="h-full w-full grid grid-cols-3 grid-rows-1 overflow-y-hidden">
         <div>
             <form @submit.prevent="addIngredient" class="space-x-2">
             <label>
@@ -222,7 +186,11 @@ let chartOptions = reactive({
 </div>
 </template>
 
-<style scoped>
+<style scoped lang="less">
+
+.ffe-makeburger-container {
+    grid-template-rows: auto 1fr;
+}
 .custom-nudge-bottom-left {
     position: relative;
     top: 0.1rem;

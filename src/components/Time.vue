@@ -21,24 +21,37 @@ let currentMonth = dt.month();
 
 // Logic interval
 let timeInterval = 50;
-setInterval(() => {
-    // Progress time
-    const currentTime = dayjs().valueOf();
-    if (previousTime === null) {
-        previousTime = dayjs().valueOf();
-    } else {
-        deltaTime = (currentTime - previousTime) / 1000;
-        previousTime = currentTime;
+
+let timeStarted = false;
+
+const startTime = function() {
+    if (!timeStarted) {
+        timeStarted = true;
+        setInterval(() => {
+            // Progress time
+            const currentTime = dayjs().valueOf();
+            if (previousTime === null) {
+                previousTime = dayjs().valueOf();
+            } else {
+                deltaTime = (currentTime - previousTime) / 1000;
+                previousTime = currentTime;
+            }
+            dt = dt.add(1 * deltaTime, 'hour');
+            dtString.value = dt.format(dtTemplate);
+            // Subtract rates
+            // if (dt.month() !== currentMonth) {
+            //     money.value -= 500;
+            //     currentMonth = dt.month();
+            // }
+        }, timeInterval);
     }
-    dt = dt.add(1 * deltaTime, 'hour');
-    dtString.value = dt.format(dtTemplate);
-    // Subtract rates
-    // if (dt.month() !== currentMonth) {
-    //     money.value -= 500;
-    //     currentMonth = dt.month();
-    // }
-}, timeInterval);
+};
+
+defineExpose({
+    startTime,
+});
+
 </script>
 <template>
-    <p class="font-mono">Time: {{ getDtString }}</p>
+    <p>Time: {{ getDtString }}</p>
 </template>
