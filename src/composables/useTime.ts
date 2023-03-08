@@ -1,6 +1,6 @@
 // Other
 import dayjs from 'dayjs';
-import UTC from 'dayjs/plugin/UTC';
+import UTC from 'dayjs/plugin/utc';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { reactive } from 'vue';
 

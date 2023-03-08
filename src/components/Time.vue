@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import UTC from 'dayjs/plugin/UTC';
+import UTC from 'dayjs/plugin/utc';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat'
 import { computed, reactive, ref } from 'vue';
 // Setup Day.js
