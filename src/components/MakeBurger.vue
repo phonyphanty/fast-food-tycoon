@@ -81,9 +81,7 @@ const moveIngredientDown = (index: number) => moveIngredient(index, index+1);
 evaluate();
 
 const saveBurger = () => {
-    console.log(burgerStack.icon.elements);
     mainMenu.add(burgerStack.deepCopy());
-    console.log(mainMenu);
     if (burgerStack.reset()) {
         evaluate();
     } else {

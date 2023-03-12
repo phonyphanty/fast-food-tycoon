@@ -1,8 +1,13 @@
+/**
+ * Main composable for global singletons
+ * @module
+ */
+
 // Composables
 import { useMenu } from '@/composables/useMenu';
 import { useMoney } from '@/composables/useMoney';
 // Other imports
-import { reactive, ref, type Ref } from 'vue';
+import { reactive } from 'vue';
 
 const { Menu } = useMenu();
 const { Money } = useMoney();

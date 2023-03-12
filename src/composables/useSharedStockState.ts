@@ -1,6 +1,12 @@
-import { reactive, unref } from 'vue';
-/* Composables */
+/**
+ * Global singletons related to stock planning and stock piling
+ * @module
+ */
+
+// Composables
 import { useStock } from '@/composables/useStock';
+// Other
+import { reactive, unref } from 'vue';
 
 const { StockPlan, PairedStockPlan, Stock } = useStock();
 

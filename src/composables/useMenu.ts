@@ -47,10 +47,7 @@ export function useMenu() {
 
     type MenuType = InstanceType<typeof Menu>;
 
-    const mainMenu = reactive(new Menu());
-
     return {
-        Menu,
-        mainMenu,
+        Menu
     };
 }

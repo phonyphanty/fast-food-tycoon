@@ -60,7 +60,6 @@ export function useAbstractFood() {
     }
 
     function isStack(product: Product): product is Stack {
-        debugger;
         return Object.getPrototypeOf(product).constructor.name === Stack.name;
     }
 

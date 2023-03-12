@@ -259,7 +259,6 @@ export function useBurgerStack() {
                     });
                 }
             });
-            console.log(this.qualities);
             return results;
         }
 

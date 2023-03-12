@@ -10,6 +10,7 @@ import { useQueue } from '@/composables/useQueue';
 import { useModal } from '@/composables/useModal';
 import { useSharedState } from '@/composables/useSharedState';
 import { useSharedStockState } from '@/composables/useSharedStockState';
+import { useSharedTimeState } from '@/composables/useSharedTimeState';
 import { useMoney } from '@/composables/useMoney';
 // Other
 import { onMounted, reactive, ref, type Ref } from 'vue';
@@ -18,12 +19,11 @@ const { Queue } = useQueue();
 const { Modal } = useModal();
 const { money } = useSharedState();
 const { stock } = useSharedStockState();
+const { time } = useSharedTimeState();
 
-type TimeComponent = InstanceType<typeof TimeComponent>;
 type ModalComponent = InstanceType<typeof ModalComponent>;
 type Modal = InstanceType<typeof Modal>;
 
-const timeComponent = ref<TimeComponent | null>();
 const modalComponent = ref<ModalComponent | null>();
 
 let openRestaurantModal: Modal | null = null;
@@ -34,8 +34,7 @@ let openRestaurant = ref(function() {
 });
 
 const approveOpenRestaurant = function() {
-    stock.buyIngredients(money);
-    timeComponent.value?.startTime();
+    time.start();
     openRestaurant.value = () => {};
 }
 
@@ -100,7 +99,7 @@ let setCurrentTab = (str: string): void => {
     </div>
     <ModalComponent :modal="modal" ref="modalComponent" />
     <footer class="h-16 flex flex-wrap content-end font-mono">
-        <TimeComponent ref="timeComponent" class="h-fit w-full shrink-0"/>
+        <TimeComponent class="h-fit w-full shrink-0"/>
         <p class="font-mono h-fit w-full shrink-0">Cash: {{ money }}</p>
     </footer>
 </div>
