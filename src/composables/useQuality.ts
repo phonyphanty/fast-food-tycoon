@@ -41,6 +41,10 @@ export function useQuality() {
             this._qualities.set(quality, value);
             return true;
         }
+
+        entries(): IterableIterator<[Quality, T]> {
+            return this.qualities.entries();
+        }
     }
 
     let qualityToEmoji = {
@@ -51,12 +55,13 @@ export function useQuality() {
         [Quality.Aroma]: '🌼',
         [Quality.Umami]: '🍖',
         [Quality.Softness]: '🍦',
+        [Quality.Satiety]: '😋',
     };
 
     function qualityValueIntoString(quality: Quality, value: number): string {
         let emoji = qualityToEmoji[quality];
         let str = '';
-        for (let i = 0; i < Math.min(5, Math.max(0, value)); i++) {
+        for (let i = 0; i < Math.max(0, value); i++) {
             str += emoji;
         }
         return str;

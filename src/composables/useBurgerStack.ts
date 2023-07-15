@@ -46,61 +46,61 @@ export function useBurgerStack() {
      * Represents a stack of burgers that can be modified and evaluated.
      */
      class BurgerStack extends Stack {
-        /** ID */
         private _id: string;
+        /** ID */
         public get id(): string {
             return this._id;
         }
-        /** Name */
         private _name: string;
+        /** Name */
         public get name(): string {
             return this._name;
         }
         private set name(value: string) {
             this._name = value;
         }
-        /** Cost */
         private _cost: number = 0;
+        /** Cost */
         public get cost(): number {
             return this._cost;
         }
         private set cost(value: number) {
             this._cost = value;
         }
-        /** Price */
         private _price: number = 0;
+        /** Price */
         public get price(): number {
             return this._price;
         }
         private set price(value: number) {
             this._price = value;
         }
-        /** Icon */
         private _icon: BurgerStackIcon;
+        /** Icon */
         public get icon(): BurgerStackIcon {
             return this._icon;
         }
         private set icon(value: BurgerStackIcon) {
             this._icon = value;
         }
-        /** List of uniquely-identified burger ingredients */
         private _ingredients: UniqueObject<BurgerIngredient>[];
+        /** List of uniquely-identified burger ingredients */
         public get ingredients(): UniqueObject<BurgerIngredient>[] {
             return this._ingredients;
         }
         private set ingredients(value: UniqueObject<BurgerIngredient>[]) {
             this._ingredients = value;
         }
-        /** Combinations */
         private static _combinations: Combination[]; 
+        /** Combinations */
         public static get combinations(): Combination[] {
              return BurgerStack._combinations;
         }
         public static set combinations(value: Combination[]) {
             this._combinations = value;
         }
-        /** Qualities */
         private _qualities: QualityMap<number> = new QualityMap<number>();
+        /** Qualities */
         public get qualities(): QualityMap<number> {
             return this._qualities;
         }

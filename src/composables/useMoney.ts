@@ -1,5 +1,5 @@
 /**
- * Handle money logic.
+ * Handles money logic.
  * @module
  */
 

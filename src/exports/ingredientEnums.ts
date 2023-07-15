@@ -6,6 +6,7 @@ export enum Quality {
     Umami = 'Umami',
     Softness = 'Softness',
     Presentation = 'Presentation',
+    Satiety = 'Satiety',
     // TODO: greasiness? addictiveness? horniness? persausiveness?
 }
 

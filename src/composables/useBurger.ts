@@ -108,29 +108,32 @@ export function useBurger() {
     }
 
     BurgerIngredients.add(
-        new BurgerIngredient("5esxotsudy8", '🍞 Cheap Bun', 1, true, IngredientType.Bun, new QualityMap<QualityAndAttributes>(
+        new BurgerIngredient("cheap-bun", '🍞 Cheap Bun', 1, true, IngredientType.Bun, new QualityMap<QualityAndAttributes>(
             makeQualAttr(Quality.Aroma, 0),
             makeQualAttr(Quality.Softness, 1),
             makeQualAttr(Quality.Spiciness, -1),
             makeQualAttr(Quality.Sweetness, 0),
             makeQualAttr(Quality.Umami, 0),
             makeQualAttr(Quality.Presentation, -1),
+            makeQualAttr(Quality.Satiety, 1),
         ), 'border-t-yellow-600'),
-        new BurgerIngredient("squj2g1fbz", '🍖 Basic Ground Patty', 3, true, IngredientType.Patty, new QualityMap<QualityAndAttributes>(
+        new BurgerIngredient("cheap-patty", '🍖 Basic Ground Patty', 3, true, IngredientType.Patty, new QualityMap<QualityAndAttributes>(
             makeQualAttr(Quality.Aroma, 1),
             makeQualAttr(Quality.Softness, -2),
             makeQualAttr(Quality.Spiciness, -1),
             makeQualAttr(Quality.Sweetness, 0),
             makeQualAttr(Quality.Umami, 2),
             makeQualAttr(Quality.Presentation, 0),
+            makeQualAttr(Quality.Satiety, 2),
         ), 'border-t-amber-800'),
-        new BurgerIngredient("msmm387qs0h", '🧀 Cheap Slice of Cheese', 2, true, IngredientType.Cheese, new QualityMap<QualityAndAttributes>(
+        new BurgerIngredient("cheap-cheese", '🧀 Cheap Slice of Cheese', 2, true, IngredientType.Cheese, new QualityMap<QualityAndAttributes>(
             makeQualAttr(Quality.Aroma, 1),
             makeQualAttr(Quality.Softness, 0),
             makeQualAttr(Quality.Spiciness, -1),
             makeQualAttr(Quality.Sweetness, 0),
             makeQualAttr(Quality.Umami, 0),
             makeQualAttr(Quality.Presentation, -2),
+            makeQualAttr(Quality.Satiety, 1),
         ), 'border-t-yellow-300'),
     );
 

@@ -12,6 +12,7 @@ import { useSharedState } from '@/composables/useSharedState';
 import { useSharedStockState } from '@/composables/useSharedStockState';
 import { useSharedTimeState } from '@/composables/useSharedTimeState';
 import { useMoney } from '@/composables/useMoney';
+import { useStandardCustomerType } from '@/composables/useStandardCustomerType';
 // Other
 import { onMounted, reactive, ref, type Ref } from 'vue';
 
@@ -20,6 +21,7 @@ const { Modal } = useModal();
 const { money } = useSharedState();
 const { stock } = useSharedStockState();
 const { time } = useSharedTimeState();
+const { StandardCustomerType } = useStandardCustomerType();
 
 type ModalComponent = InstanceType<typeof ModalComponent>;
 type Modal = InstanceType<typeof Modal>;
@@ -30,6 +32,7 @@ let openRestaurantModal: Modal | null = null;
 
 let openRestaurant = ref(function() {
     modal.value = openRestaurantModal as Modal;
+    new StandardCustomerType().findBestPurchases();
     modalComponent.value?.showModal();
 });
 
