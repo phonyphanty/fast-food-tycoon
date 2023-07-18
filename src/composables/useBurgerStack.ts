@@ -56,7 +56,7 @@ export function useBurgerStack() {
         public get name(): string {
             return this._name;
         }
-        private set name(value: string) {
+        public set name(value: string) {
             this._name = value;
         }
         private _cost: number = 0;
@@ -72,7 +72,7 @@ export function useBurgerStack() {
         public get price(): number {
             return this._price;
         }
-        private set price(value: number) {
+        public set price(value: number) {
             this._price = value;
         }
         private _icon: BurgerStackIcon;

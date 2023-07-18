@@ -6,7 +6,7 @@ import { useStock } from "@/composables/useStock";
 // Exports
 import { Quality, IngredientType } from "@/exports/ingredientEnums";
 // Other imports
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 
 export function useBurger() {
     const { QualityAndAttributes, QualityMap } = useQuality();
@@ -82,12 +82,9 @@ export function useBurger() {
      * the game.
      */
     class BurgerIngredients {
-        private static _ingredients: BurgerIngredient[] = [];
+        private static _ingredients: Map<string, BurgerIngredient> = new Map();
         public static get ingredients() {
-            return BurgerIngredients._ingredients;
-        }
-        public static set ingredients(value: BurgerIngredient[]) {
-            BurgerIngredients._ingredients = value;
+            return Array.from(BurgerIngredients._ingredients.values());
         }
 
         /**
@@ -98,8 +95,21 @@ export function useBurger() {
          * @returns {boolean} True if addition successful, false otherwise.
          */
         static add(...ingredients: BurgerIngredient[]) : boolean {
-            BurgerIngredients.ingredients.push(...ingredients);
+            ingredients.forEach(ingredient => {
+                if (BurgerIngredients._ingredients.has(ingredient.id)) {
+                    return false;
+                } else {
+                    BurgerIngredients._ingredients.set(ingredient.id, ingredient);
+                }
+            });
             return true;
+        }
+
+        /**
+         * Get a map of all burger ingredients.
+         */
+        static getIngredientMap() {
+            return BurgerIngredients._ingredients;
         }
     }
 
@@ -140,7 +150,8 @@ export function useBurger() {
     stock.addIngredient(...BurgerIngredients.ingredients as Ingredient[])
 
     let burgerIngredients = ref(BurgerIngredients.ingredients);
+    let burgerIngredientsMap = reactive(BurgerIngredients.getIngredientMap());
 
-    return { Ingredient, BurgerIngredient, BurgerIngredients, burgerIngredients};
+    return { Ingredient, BurgerIngredient, BurgerIngredients, burgerIngredients, burgerIngredientsMap};
 
 }
