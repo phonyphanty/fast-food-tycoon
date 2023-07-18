@@ -12,11 +12,12 @@ import type { Quality } from '@/exports/ingredientEnums';
 
 let { Product } = useAbstractFood();
 let { Purchase } = usePurchase();
-let { QualityDesire } = useQualityDesire();
+let { QualityDesire, UncentredQualityDesire } = useQualityDesire();
 
 type Product = InstanceType<typeof Product>;
 type Purchase = InstanceType<typeof Purchase>;
 type QualityDesire = InstanceType<typeof QualityDesire>;
+type UncentredQualityDesire = InstanceType<typeof UncentredQualityDesire>;
 
 /**
  * Define interface for customer types, including their eating
@@ -35,9 +36,15 @@ export function useCustomerType() {
             return this._value;
         }
 
-        constructor(product: Product, value: number) {
+        private _satiety: number;
+        public get satiety(): number {
+            return this._satiety;
+        }
+
+        constructor(product: Product, value: number, satiety: number) {
             this._product = product;
             this._value = value;
+            this._satiety = satiety;
         }
     }
     
@@ -85,6 +92,22 @@ export function useCustomerType() {
          * Desire functions for each quality.
          */
         public abstract qualityDesires: Record<Quality, QualityDesire | undefined>;
+        
+        /**
+         * The optimal value of a product to the customer type.
+         */
+        public abstract maxValue: number;
+
+        /**
+         * The worst value of a product to the customer type.
+         */
+        public abstract minValue: number;
+
+        /**
+         * Desire function for satiety -- operates on a purchase-level, rather
+         * than a product-level.
+         */
+        public abstract satietyDesire: UncentredQualityDesire;
 
         /**
          * Find the best selection of products for the customer type at every

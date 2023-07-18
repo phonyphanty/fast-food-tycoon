@@ -23,7 +23,7 @@ let { Reputation } = useReputation();
 let { Awareness } = useAwareness();
 let { reputation, awareness, mainMenu } = useSharedState();
 let { time } = useSharedTimeState();
-let { QualityDesire, ParabolicQualityDesire, LinearQualityDesire } = useQualityDesire();
+let { QualityDesire, ParabolicQualityDesire, LinearQualityDesire, UncentredQualityDesire, UncentredParabolicQualityDesire } = useQualityDesire();
 let { isBurgerStack } = useBurgerStack();
 let { ElementQuantity } = useStock();
 
@@ -34,11 +34,18 @@ type QualityDesire = InstanceType<typeof QualityDesire>;
 type ParabolicQualityDesire = InstanceType<typeof ParabolicQualityDesire>;
 type LinearQualityDesire = InstanceType<typeof LinearQualityDesire>;
 type ElementQuantity<T> = InstanceType<typeof ElementQuantity<T>>;
+type UncentredParabolicQualityDesire = InstanceType<typeof UncentredParabolicQualityDesire>;
+type UncentredQualityDesire = InstanceType<typeof UncentredQualityDesire>;
 
 class ValueMetadata {
     private _value: number;
     public get value(): number {
         return this._value;
+    }
+
+    private _satiety: number;
+    public get satiety(): number {
+        return this._satiety;
     }
 
     private _product: Product | undefined;
@@ -51,8 +58,9 @@ class ValueMetadata {
         return this._ref;
     }
 
-    constructor(value: number, product?: Product, ref?: [number, number]) {
+    constructor(value: number, satiety: number, product?: Product, ref?: [number, number]) {
         this._value = value;
+        this._satiety = satiety;
         this._product = product;
         this._ref = ref;
     }
@@ -114,16 +122,16 @@ export function useStandardCustomerType() {
             ['08:00:00', 10],
             ['09:00:00', 10],
             ['10:00:00', 10],
-            ['11:00:00', 20],
-            ['12:00:00', 20],
-            ['13:00:00', 20],
+            ['11:00:00', 12],
+            ['12:00:00', 12],
+            ['13:00:00', 12],
             ['14:00:00', 5],
             ['15:00:00', 5],
             ['16:00:00', 5],
             ['17:00:00', 5],
-            ['18:00:00', 25],
-            ['19:00:00', 25],
-            ['20:00:00', 25],
+            ['18:00:00', 12],
+            ['19:00:00', 12],
+            ['20:00:00', 12],
             ['21:00:00', 5],
             ['22:00:00', 5],
             ['23:00:00', 5],
@@ -177,7 +185,7 @@ export function useStandardCustomerType() {
             return this._chanceOfTurningAway;
         }
 
-        public qualityDesires: Record<Quality, QualityDesire> = {
+        public _qualityDesires: Record<Quality, QualityDesire | undefined> = {
             [Quality.Umami]: new LinearQualityDesire(10, -4, 1, 1),
             [Quality.Aroma]: new LinearQualityDesire(10, -8, 1, 0),
             [Quality.Sweetness]: new ParabolicQualityDesire(2, -2, 0.5, 1),
@@ -186,6 +194,25 @@ export function useStandardCustomerType() {
             [Quality.Softness]: new ParabolicQualityDesire(7, -4, 0.5, 5),
             [Quality.Presentation]: new LinearQualityDesire(10, -15, 1, 2),
             [Quality.Satiety]: new ParabolicQualityDesire(2, -2, 0.1, 5),
+        }
+        public get qualityDesires(): Record<Quality, QualityDesire | undefined> {
+            return this._qualityDesires;
+        }
+
+        public _maxValue: number = 25;
+        public get maxValue(): number {
+            return this._maxValue;
+        }
+
+        public _minValue: number = -25;
+        public get minValue(): number {
+            return this._minValue;
+        }
+
+        public _satietyDesire: UncentredParabolicQualityDesire = 
+            new UncentredParabolicQualityDesire(5, -5, 2);
+        public get satietyDesire(): UncentredParabolicQualityDesire {
+            return this._satietyDesire;
         }
 
         constructor() {
@@ -198,20 +225,29 @@ export function useStandardCustomerType() {
          * @param products 
          * @returns a list of all products and their associated values
          */
-        public valueProducts(products: Product[]): ValuedProduct[] {
+        private valueProducts(products: Product[]): ValuedProduct[] {
             const valuedProducts: ValuedProduct[] = [];
             products.forEach(product => {
                 if (isBurgerStack(product)) {
                     let productValue = 0;
+                    let productSatiety = 0;
                     for (const [quality, value] of product.qualities.entries()) {
+                        // Value
                         const qualityDesire = this.qualityDesires[quality];
-                        productValue += qualityDesire.getReward(value);
+                        if (qualityDesire !== undefined) {
+                            productValue += qualityDesire.getReward(value);
+                        }
+                        // Satiety
+                        if (quality === Quality.Satiety) {
+                            productSatiety += value;
+                        }
                     }
-                    valuedProducts.push(new ValuedProduct(product, productValue));
+                    valuedProducts.push(new ValuedProduct(product, productValue, productSatiety));
                 } else {
                     throw new Error(`Unknown product type: ${product.constructor.name}}`);
                 }
             });
+            debugger;
             return valuedProducts;
         }
 
@@ -222,12 +258,14 @@ export function useStandardCustomerType() {
         public findBestPurchases(): Map<string, Purchase> {
             const maxWTP = Array.from(this.WTPByTime.values())
                 .reduce((previous, current) => Math.max(previous, current), 0);
-                const valuedProducts = this.valueProducts(mainMenu.get());
-                // Find the best purchases through bottom-up unbounded knapsack
-                const n = valuedProducts.length + 1;
-                const matrixFill: Array<ValueMetadata> = Array<ValueMetadata>(maxWTP + 1).fill(new ValueMetadata(0));
-                const matrix: Array<Array<ValueMetadata>> = Array<Array<ValueMetadata>>(n).fill(matrixFill);
-                // Go through each row of matrix
+            const valuedProducts = this.valueProducts(mainMenu.get());
+            // Find the best purchases through bottom-up unbounded knapsack
+            const n = valuedProducts.length + 1;
+            const matrix: Array<Array<ValueMetadata>> = Array<Array<ValueMetadata>>(n);
+            for (let i = 0; i < n; i++) {
+                matrix[i] = Array<ValueMetadata>(maxWTP + 1).fill(new ValueMetadata(0, 0));
+            }
+            // Go through each row of matrix
             for (let i = 1; i < n; i++) {
                 const valuedProduct = valuedProducts[i - 1];
                 const product = valuedProduct.product;
@@ -237,17 +275,38 @@ export function useStandardCustomerType() {
                     // Can we fit the product in our knapsack?
                     if (product.price <= j) {
                         const withWtpTaken = matrix[i][j - product.price];
-                        // Is it worth it?
-                        if (valuedProduct.value + withWtpTaken.value > prevI.value) {
+                        const newSatiety = valuedProduct.satiety + withWtpTaken.satiety;
+                        const addedValue = valuedProduct.value + withWtpTaken.value;
+                        const currentTime = time.dt.startOf('hour').format('HH:mm:ss');
+                        const currentHunger = this.hungerByTime.get(currentTime);
+                        if (currentHunger === undefined) {
+                            throw new Error(`Could not find current time in hungerByTime: ${currentTime}`);
+                        }
+                        const newValue = addedValue + this.satietyDesire.getReward(addedValue, currentHunger);
+                        // Is it worth it to take the current product?
+                        if (newValue > prevI.value) {
+                            debugger;
                             matrix[i][j] = new ValueMetadata(
-                                valuedProduct.value + withWtpTaken.value,
+                                newValue,
+                                newSatiety,
                                 product,
                                 [i, j - product.price]
-                                );
-                                continue;
-                            }
+                            );
+                            continue;
+                        // Is it worth it to not take anything?
+                        } else if (withWtpTaken.value > prevI.value) {
+                            debugger;
+                            matrix[i][j] = new ValueMetadata(
+                                withWtpTaken.value,
+                                withWtpTaken.satiety,
+                                undefined,
+                                [i, j - product.price]
+                            )
+                            continue;
+                        }
                     }
-                    // Otherwise, just use the previous one
+                    // Otherwise, just go with i - 1
+                    debugger;
                     matrix[i][j] = prevI;
                 }
             }
@@ -275,10 +334,13 @@ export function useStandardCustomerType() {
                         i = valueMetadata.ref[0];
                         j = valueMetadata.ref[1];
                     } else {
-                        break;   
+                        break;
                     }
                 }
-                const purchase = new Purchase(products, 0, StandardCustomerType);
+                const value = matrix[n - 1][wtp].value;
+                const constrainedValue = Math.min(Math.max(value, this.minValue), this.maxValue);
+                const normalisedValue = (constrainedValue - this.minValue) / (this.maxValue - this.minValue);
+                const purchase = new Purchase(products, normalisedValue, StandardCustomerType);
                 this.WTPByTime.forEach((value, key) => {
                     if (value === wtp) {
                         purchaseByHour.set(key, purchase);

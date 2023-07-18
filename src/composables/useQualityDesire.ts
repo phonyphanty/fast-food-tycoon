@@ -42,6 +42,31 @@ export function useQualityDesire() {
         public abstract getReward(value: number): number;
     }
 
+    abstract class UncentredQualityDesire {
+        protected _maxReward: number;
+        public get maxReward(): number {
+            return this._maxReward;
+        }
+
+        protected _minReward: number;
+        public get minReward(): number {
+            return this._minReward;
+        }
+
+        protected _strength: number;
+        public get strength(): number {
+            return this._strength;
+        }
+
+        constructor(maxReward: number, minReward: number, strength: number, ) {
+            this._maxReward = maxReward;
+            this._minReward = minReward;
+            this._strength = strength;
+        }
+
+        public abstract getReward(value: number, centre: number): number;
+    }
+
     /**
      * Desire modelled after a parabola.
      */
@@ -53,6 +78,22 @@ export function useQualityDesire() {
         public getReward(value: number): number {
             return Math.max(
                 -Math.abs(this.strength) * (value - this.centre)**2 + this.maxReward,
+                this.minReward
+            );
+        }
+    }
+
+    /**
+     * Desire modelled after a parabola with a dynamic centre.
+     */
+    class UncentredParabolicQualityDesire extends UncentredQualityDesire {
+        constructor(maxReward: number, minReward: number, strength: number) {
+            super(maxReward, minReward, strength);
+        }
+
+        public getReward(value: number, centre: number): number {
+            return Math.max(
+                -Math.abs(this.strength) * (value - centre)**2 + this.maxReward,
                 this.minReward
             );
         }
@@ -79,7 +120,9 @@ export function useQualityDesire() {
 
     return {
         QualityDesire,
+        UncentredQualityDesire,
         ParabolicQualityDesire,
+        UncentredParabolicQualityDesire,
         LinearQualityDesire,
     }
 }
