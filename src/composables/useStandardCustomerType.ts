@@ -15,17 +15,19 @@ import { useQualityDesire } from "./useQualityDesire";
 import { Quality } from "@/exports/ingredientEnums";
 import { useBurgerStack } from "@/composables/useBurgerStack";
 import { useStock } from "@/composables/useStock";
+import { useAbstractMenu } from "@/composables/useAbstractMenu";
 
 let { Product, Ingredient } = useAbstractFood();
 let { CustomerType, ValuedProduct } = useCustomerType();
 let { Purchase } = usePurchase();
 let { Reputation } = useReputation();
 let { Awareness } = useAwareness();
-let { reputation, awareness, mainMenu } = useSharedState();
+let { reputation, awareness } = useSharedState();
 let { time } = useSharedTimeState();
 let { QualityDesire, ParabolicQualityDesire, LinearQualityDesire, UncentredQualityDesire, UncentredParabolicQualityDesire } = useQualityDesire();
 let { isBurgerStack } = useBurgerStack();
 let { ElementQuantity } = useStock();
+let { AbstractMenu } = useAbstractMenu();
 
 type ValuedProduct = InstanceType<typeof ValuedProduct>;
 type Product = InstanceType<typeof Product>;
@@ -36,6 +38,7 @@ type LinearQualityDesire = InstanceType<typeof LinearQualityDesire>;
 type ElementQuantity<T> = InstanceType<typeof ElementQuantity<T>>;
 type UncentredParabolicQualityDesire = InstanceType<typeof UncentredParabolicQualityDesire>;
 type UncentredQualityDesire = InstanceType<typeof UncentredQualityDesire>;
+type AbstractMenu = InstanceType<typeof AbstractMenu>;
 
 class ValueMetadata {
     private _value: number;
@@ -255,10 +258,10 @@ export function useStandardCustomerType() {
          * Given a list of products, find the best purchases for the current
          * time.
          */
-        public findBestPurchases(): Map<string, Purchase> {
+        public findBestPurchases(menu: AbstractMenu): Map<string, Purchase> {
             const maxWTP = Array.from(this.WTPByTime.values())
                 .reduce((previous, current) => Math.max(previous, current), 0);
-            const valuedProducts = this.valueProducts(mainMenu.get());
+            const valuedProducts = this.valueProducts(menu.get());
             // Find the best purchases through bottom-up unbounded knapsack
             const n = valuedProducts.length + 1;
             const matrix: Array<Array<ValueMetadata>> = Array<Array<ValueMetadata>>(n);

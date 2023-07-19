@@ -1,6 +1,5 @@
 <script setup lang="ts">
 /* Composables */
-import { useSharedState } from '@/composables/useSharedState';
 import { useSharedStockState } from '@/composables/useSharedStockState';
 import { useBurgerStack } from '@/composables/useBurgerStack';
 import { useStock } from '@/composables/useStock';
@@ -11,10 +10,9 @@ import DashboardArticleHeadingComponent from './DashboardArticleHeading.vue';
 import BurgerStackIconComponent from '@/components/BurgerStackIcon.vue';
 import { computed } from 'vue';
 
-const { mainMenu } = useSharedState();
 const { savedStockPlan, tempStockPlan, stock } = useSharedStockState();
 const { isBurgerStack } = useBurgerStack();
-const { StockPlan, ElementQuantity } = useStock();
+const { ElementQuantity } = useStock();
 const { Product } = useAbstractFood();
 
 type Product = InstanceType<typeof Product>;

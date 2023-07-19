@@ -1,53 +1,79 @@
 // Composables
 import { useAbstractFood } from '@/composables/useAbstractFood';
+import { useSharedCustomerTypeState } from '@/composables/useSharedCustomerTypeState';
 import { useSharedStockState } from '@/composables/useSharedStockState';
 import { useStock } from '@/composables/useStock';
+import { useAbstractMenu } from '@/composables/useAbstractMenu';
+import { useBurger } from '@/composables/useBurger';
+import { useBurgerStack } from '@/composables/useBurgerStack';
 // Other
 import { reactive, ref, type Ref } from 'vue';
 
-export function useMenu() {
-    let { Product } = useAbstractFood();
-    let { pairedStockPlan } = useSharedStockState();
-    let { ElementQuantity } = useStock();
+let { Product } = useAbstractFood();
+let { standardCustomerType } = useSharedCustomerTypeState();
+let { pairedStockPlan } = useSharedStockState();
+let { ElementQuantity } = useStock();
+let { AbstractMenu } = useAbstractMenu();
+const { BurgerStack } = useBurgerStack();
+const { burgerIngredientsMap } = useBurger();
 
-    type Product = InstanceType<typeof Product>;
+type Product = InstanceType<typeof Product>;
 
-    class Menu {
-        private products: Product[] = [];
+class Menu extends AbstractMenu {
+    private products: Product[] = [];
 
-        constructor() {
-            
+    constructor() {
+        super();
+    }
+
+    public get(): Product[] {
+        return this.products;
+    }
+
+    public add(product: Product): void {
+        this.products.push(product);
+        pairedStockPlan.addProduct(new ElementQuantity<Product>(product));
+        standardCustomerType.findBestPurchases(this);
+    }
+    
+    public delete(product: Product): boolean {
+        let ix = -1;
+        ix = this.products.findIndex(value => value.id === product.id)
+        if (ix !== -1) {
+            this.products = this.products.slice(0, ix).concat(this.products.slice(ix + 1));
+            pairedStockPlan.removeProduct(product);
+            standardCustomerType.findBestPurchases(this);
+            return true;
+        } else {
+            return false;
         }
+    }
 
-        public get(): Product[] {
-            return this.products;
-        }
+    public length(): number {
+        return this.products.length;
+    }
+};
 
-        public add(product: Product): void {
-            this.products.push(product);
-            pairedStockPlan.addProduct(new ElementQuantity<Product>(product));
-        }
+type MenuType = InstanceType<typeof Menu>;
 
-        public delete(product: Product): boolean {
-            let ix = -1;
-            ix = this.products.findIndex(value => value.id === product.id)
-            if (ix !== -1) {
-                this.products = this.products.slice(0, ix).concat(this.products.slice(ix + 1));
-                pairedStockPlan.removeProduct(product);
-                return true;
-            } else {
-                return false;
-            }
-        }
+const mainMenu = reactive(new Menu());
 
-        public length(): number {
-            return this.products.length;
-        }
-    };
+// Debug cheeseburger
+const cheeseburger = new BurgerStack(
+    burgerIngredientsMap.get('cheap-bun')!,
+    burgerIngredientsMap.get('cheap-cheese')!,
+    burgerIngredientsMap.get('cheap-patty')!,
+    burgerIngredientsMap.get('cheap-bun')!,
+);
+cheeseburger.name = 'Cheeseburger';
+cheeseburger.price = 8;
+cheeseburger.evaluate();
+cheeseburger.generateIcon();
 
-    type MenuType = InstanceType<typeof Menu>;
+mainMenu.add(cheeseburger);
 
+export function useMenu() {    
     return {
-        Menu
+        mainMenu
     };
 }

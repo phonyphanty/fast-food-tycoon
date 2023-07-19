@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /* Composables */
-import { useSharedState } from '@/composables/useSharedState';
+import { useMenu } from '@/composables/useMenu';
 import { useAbstractFood } from '@/composables/useAbstractFood';
 import { useBurgerStack } from '@/composables/useBurgerStack';
 /* Components */
@@ -8,7 +8,7 @@ import BurgerStackIconComponent from '@/components/BurgerStackIcon.vue';
 
 const { Product } = useAbstractFood();
 const { BurgerStack, isBurgerStack, BurgerStackIcon } = useBurgerStack();
-const { mainMenu } = useSharedState();
+const { mainMenu } = useMenu();
 
 type Product = InstanceType<typeof Product>;
 type BurgerStack = InstanceType<typeof BurgerStack>;

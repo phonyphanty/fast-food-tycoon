@@ -13,7 +13,7 @@ export function useAwareness() {
      */
     class Awareness {
         /** The maximum awareness value. */
-        public static readonly MAX_VALUE: number = 1000000;
+        public static readonly MAX_VALUE: number = 1_000_000;
 
         private _value: number;
         /** The restaurant's awareness. 0 is unaware, maxAwareness is

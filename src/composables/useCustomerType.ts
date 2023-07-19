@@ -8,16 +8,19 @@
 import { useAbstractFood } from '@/composables/useAbstractFood';
 import { usePurchase } from '@/composables/usePurchase';
 import { useQualityDesire } from '@/composables/useQualityDesire';
+import { useAbstractMenu } from '@/composables/useAbstractMenu';
 import type { Quality } from '@/exports/ingredientEnums';
 
 let { Product } = useAbstractFood();
 let { Purchase } = usePurchase();
 let { QualityDesire, UncentredQualityDesire } = useQualityDesire();
+const { AbstractMenu } = useAbstractMenu();
 
 type Product = InstanceType<typeof Product>;
 type Purchase = InstanceType<typeof Purchase>;
 type QualityDesire = InstanceType<typeof QualityDesire>;
 type UncentredQualityDesire = InstanceType<typeof UncentredQualityDesire>;
+type AbstractMenu = InstanceType<typeof AbstractMenu>;
 
 /**
  * Define interface for customer types, including their eating
@@ -116,7 +119,7 @@ export function useCustomerType() {
          * the customer type at every time slot. If there are no good
          * selections, returns an empty array.
          */
-        public abstract findBestPurchases(): Map<string, Purchase>;
+        public abstract findBestPurchases(menu: AbstractMenu): Map<string, Purchase>;
 
         /**
          * Calculate the probability of the customer wanting food from the

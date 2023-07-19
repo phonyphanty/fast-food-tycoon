@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
 /* Composables */
-import { useSharedState } from '@/composables/useSharedState';
+import { useMenu } from '@/composables/useMenu';
 /* Components */
 import MenuItemComponent from './MenuItem.vue';
 
-const { mainMenu } = useSharedState();
+const { mainMenu } = useMenu();
 
 </script>
 

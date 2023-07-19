@@ -4,7 +4,7 @@ import { useBurger } from '@/composables/useBurger';
 import { useBurgerStack } from '@/composables/useBurgerStack';
 import { useCombinationResult } from '@/composables/useCombinationResult';
 import { useUnique } from '@/composables/useUnique';
-import { useSharedState } from '@/composables/useSharedState';
+import { useMenu } from '@/composables/useMenu';
 import { useQuality } from '@/composables/useQuality';
 /* Components */
 import BurgerIngredientComponent from './BurgerIngredient.vue';
@@ -16,7 +16,7 @@ const { DescriptiveCombinationResult } = useCombinationResult();
 const { burgerIngredients } = useBurger();
 const { BurgerStack } = useBurgerStack();
 const { UniqueObject } = useUnique();
-const { mainMenu } = useSharedState();
+const { mainMenu } = useMenu();
 const { qualityValueIntoString } = useQuality();
 
 type DescriptiveCombinationResult = InstanceType<typeof DescriptiveCombinationResult>;
