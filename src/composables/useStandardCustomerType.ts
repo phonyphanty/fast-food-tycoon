@@ -78,6 +78,14 @@ export function useStandardCustomerType() {
      * Handle all standard customer type logic.
      */
     class StandardCustomerType extends CustomerType {
+        private _bestPurchases: Map<string, Purchase> = new Map();
+        public get bestPurchases(): Map<string, Purchase> {
+            return this._bestPurchases;
+        }
+        private set bestPurchases(value: Map<string, Purchase>) {
+            this._bestPurchases = value;
+        }
+
         private _desireByTime: Map<string, number> = new Map([
             ['00:00:00', 0.1],
             ['01:00:00', 0.1],
@@ -250,7 +258,6 @@ export function useStandardCustomerType() {
                     throw new Error(`Unknown product type: ${product.constructor.name}}`);
                 }
             });
-            debugger;
             return valuedProducts;
         }
 
@@ -288,7 +295,6 @@ export function useStandardCustomerType() {
                         const newValue = addedValue + this.satietyDesire.getReward(addedValue, currentHunger);
                         // Is it worth it to take the current product?
                         if (newValue > prevI.value) {
-                            debugger;
                             matrix[i][j] = new ValueMetadata(
                                 newValue,
                                 newSatiety,
@@ -298,7 +304,6 @@ export function useStandardCustomerType() {
                             continue;
                         // Is it worth it to not take anything?
                         } else if (withWtpTaken.value > prevI.value) {
-                            debugger;
                             matrix[i][j] = new ValueMetadata(
                                 withWtpTaken.value,
                                 withWtpTaken.satiety,
@@ -309,7 +314,6 @@ export function useStandardCustomerType() {
                         }
                     }
                     // Otherwise, just go with i - 1
-                    debugger;
                     matrix[i][j] = prevI;
                 }
             }
@@ -350,7 +354,7 @@ export function useStandardCustomerType() {
                     }
                 });
             });
-            debugger;
+            this.bestPurchases = purchaseByHour;
             return purchaseByHour;
         }
         

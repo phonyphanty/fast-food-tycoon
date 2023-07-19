@@ -53,6 +53,11 @@ export function useCustomerType() {
     
     abstract class CustomerType {
         /**
+         * Maps time of day to the best purchases for that time of day.
+         */
+        public abstract bestPurchases: Map<string, Purchase>;
+
+        /**
          * Maps time of day to desire to eat (0 being no desire, 1 being
          * overwhelming desire)
          */
