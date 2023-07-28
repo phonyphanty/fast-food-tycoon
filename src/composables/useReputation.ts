@@ -50,7 +50,7 @@ export function useReputation() {
          * @returns The restaurant's reputation total with the added reputation
         */
        public add(toAdd: number): number {
-           this.value = Math.min(100, this.value + Math.abs(toAdd));
+           this.value = Math.min(Reputation.MAX_VALUE, this.value + Math.abs(toAdd));
            return this.value;
         }
 

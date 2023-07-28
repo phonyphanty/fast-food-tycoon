@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // Composables
-import { useSharedTimeState } from '@/composables/useSharedTimeState';
+import { useTime } from '@/composables/useTime';
 
-let { time } = useSharedTimeState();
+let { time } = useTime();
 
 </script>
 <template>

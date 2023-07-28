@@ -1,21 +1,23 @@
 // Composables
 import { useAbstractFood } from '@/composables/useAbstractFood';
-import { useSharedCustomerTypeState } from '@/composables/useSharedCustomerTypeState';
+import { useStandardCustomerType } from '@/composables/useStandardCustomerType';
 import { useSharedStockState } from '@/composables/useSharedStockState';
 import { useStock } from '@/composables/useStock';
 import { useAbstractMenu } from '@/composables/useAbstractMenu';
 import { useBurger } from '@/composables/useBurger';
 import { useBurgerStack } from '@/composables/useBurgerStack';
+import { useTime } from './useTime';
 // Other
 import { reactive, ref, type Ref } from 'vue';
 
 let { Product } = useAbstractFood();
-let { standardCustomerType } = useSharedCustomerTypeState();
+let { standardCustomerType } = useStandardCustomerType();
 let { pairedStockPlan } = useSharedStockState();
 let { ElementQuantity } = useStock();
 let { AbstractMenu } = useAbstractMenu();
 const { BurgerStack } = useBurgerStack();
 const { burgerIngredientsMap } = useBurger();
+const { time } = useTime();
 
 type Product = InstanceType<typeof Product>;
 
@@ -33,7 +35,7 @@ class Menu extends AbstractMenu {
     public add(product: Product): void {
         this.products.push(product);
         pairedStockPlan.addProduct(new ElementQuantity<Product>(product));
-        standardCustomerType.findBestPurchases(this);
+        standardCustomerType.findBestPurchases(this, time);
     }
     
     public delete(product: Product): boolean {
@@ -42,7 +44,7 @@ class Menu extends AbstractMenu {
         if (ix !== -1) {
             this.products = this.products.slice(0, ix).concat(this.products.slice(ix + 1));
             pairedStockPlan.removeProduct(product);
-            standardCustomerType.findBestPurchases(this);
+            standardCustomerType.findBestPurchases(this, time);
             return true;
         } else {
             return false;
